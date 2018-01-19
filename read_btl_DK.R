@@ -2,7 +2,7 @@ read_btl_DK <- function(filename,
                         position.identifer = "GPS_Posn",
                         cruise.identifier = "ReiseNr",
                         station.identifier = "StationNr",
-                        depth.identifier = "Echolote") {
+                        bottom.identifier = "Echolote") {
   ## get the data
   bottle <- readLines(filename)
   
@@ -91,7 +91,11 @@ read_btl_DK <- function(filename,
   data$station <- sub(".*= (.*)$", "\\1", station) 
   
   # station depth (from echo sounding)
-  depth <- bottle[grep(depth.identifier, bottle)] # get text line containing cruise identifier
-  data$depth.m <- sub(".*= (.*) m$", "\\1", depth) # extract cruise name
+  bottom <- bottle[grep(bottom.identifier, bottle)] # get text line containing cruise identifier
+  data$bottom.m <- sub(".*= (.*) m$", "\\1", bottom) # extract cruise name
+  
+  # filename
+  data$filename <- filename  
+  
   return(data)
 }
