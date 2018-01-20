@@ -68,34 +68,44 @@ read_btl_DK <- function(filename,
   
   # geographic location
   position <- bottle[grep(position.identifer, bottle)]
-  latdeg <- as.numeric(sub(".*= ([-1234567890]*) ([1234567890.]*)([NS]) ([-1234567890]*) ([1234567890.]*)([EW]).*", # defines text to be replaced; in this case as regular expression (i.e. could be any thext that fits into this pattern)
+  pos.regex <- ".*= ([-1234567890]*) ([1234567890.]*)([NS]) ([-1234567890]*) ([1234567890.]*)([EW]).*" # defines text to be replaced; in this case as regular expression (i.e. could be any text that fits into this pattern)
+  latdeg <- as.numeric(sub(pos.regex, 
                            "\\1", # defines which of the "packages" that have been defined in the brackets is used as substitute
                            position))
-  latmin <- as.numeric(sub(".*= ([-1234567890]*) ([1234567890.]*)([NS]) ([-1234567890]*) ([1234567890.]*)([EW]).*", "\\2", position))
+  latmin <- as.numeric(sub(pos.regex, "\\2", position))
   latdec <- latdeg+latmin/60
-  latdir <- sub(".*= ([-1234567890]*) ([1234567890.]*)([NS]) ([-1234567890]*) ([1234567890.]*)([EW]).*", "\\3", position)
-  longdeg <- as.numeric(sub(".*= ([-1234567890]*) ([1234567890.]*)([NS]) ([-1234567890]*) ([1234567890.]*)([EW]).*", "\\4", position))
-  longmin <- as.numeric(sub(".*= ([-1234567890]*) ([1234567890.]*)([NS]) ([-1234567890]*) ([1234567890.]*)([EW]).*", "\\5", position))
+  latdir <- sub(pos.regex, "\\3", position)
+  longdeg <- as.numeric(sub(pos.regex, "\\4", position))
+  longmin <- as.numeric(sub(pos.regex, "\\5", position))
   longdec <- longdeg+longmin/60
-  longdir <- sub(".*= ([-1234567890]*) ([1234567890.]*)([NS]) ([-1234567890]*) ([1234567890.]*)([EW]).*", "\\6", position)
+  longdir <- sub(pos.regex, "\\6", position)
   
-  data$longitude <- longdec
-  names(data)[names(data)=="longitude"] <- paste("longitude.deg", longdir, sep = "")
-  data$latitude <- latdec
-  names(data)[names(data)=="latitude"] <- paste("latitude.deg", latdir, sep = "")
+  #data$longitude <- longdec
+  #names(data)[names(data)=="longitude"] <- paste("longitude.deg", longdir, sep = "")
+  #data$latitude <- latdec
+  #names(data)[names(data)=="latitude"] <- paste("latitude.deg", latdir, sep = "")
   
   # cruise name and station number
   cruise <- bottle[grep(cruise.identifier, bottle)] # get text line containing cruise identifier
-  data$cruise <- sub(".*= (.*)$", "\\1", cruise) # extract cruise name
+  cruise <- sub(".*= (.*)$", "\\1", cruise) # extract cruise name
   station <- bottle[grep(station.identifier, bottle)] # get text line containing station identifier
-  data$station <- sub(".*= (.*)$", "\\1", station) 
+  station <- sub(".*= (.*)$", "\\1", station) 
   
   # station depth (from echo sounding)
   bottom <- bottle[grep(bottom.identifier, bottle)] # get text line containing cruise identifier
-  data$bottom.m <- sub(".*= (.*) m$", "\\1", bottom) # extract cruise name
+  bottom.m <- sub(".*= (.*) m$", "\\1", bottom) # extract cruise name
   
   # filename
-  data$filename <- filename  
+  #data$filename <- filename  
   
-  return(data)
+  return(list("df" = data,
+              "meta" = list("filename" = filename,
+                            "cruise" = cruise,
+                            "station" = station,
+                            "bottom" = bottom.m,
+                            "position" = position,
+                            "longitude decdeg" = longdec,
+                            "longitude decdir" = longdir,
+                            "latitude decdeg" = latdec,
+                            "latitude decdir" = latdir)))
 }

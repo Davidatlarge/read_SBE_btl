@@ -12,32 +12,54 @@ source("read_btl_DK.R")
 
 ## Description
 
-This function **reads bottle files** produced during Seabird Electronics CTD casts. It was written for data recorded during various cruises by the IOW (<io-warnemuende.de>) and some adjustments might be necessary before application to data recorded elsewhere. However, the function offers optional input of identifiers for **geographic position**, **cruise** name, **station** name, and the station's **bottom depth**. The idea is that the user knows any character string that identifies these meta variables in the header of the .btl file and the function finds the corresponding position in the file using grep() and extracts the values using sub().
+This function **reads bottle files** produced during Seabird Electronics CTD casts. It was written for data recorded during various cruises by the [IOW](https://www.io-warnemuende.de) and some adjustments might be necessary before application to data recorded elsewhere. However, the function offers optional input of identifiers for **geographic position**, **cruise** name, **station** name, and the station's **bottom depth**. The idea is that the user knows any character string that identifies these meta variables in the header of the .btl file and the function finds the corresponding position in the file using grep() and extracts the values using sub().
 
 ## Arguments
 
 *filename* -- the file to be imported
 
-*position.identifer* -- any string identidying the GPS position in the header, defaults to "GPS_Posn",
+*position.identifer* -- any string identifying the GPS position in the header, defaults to "GPS_Posn",
 
-*cruise.identifier* -- any string identidying the curise name in the header, defaults to"ReiseNr",
+*cruise.identifier* -- any string identifying the curise name in the header, defaults to "ReiseNr",
 
-*station.identifier* -- any string identidying the station name in the header, defaults to "StationNr",
+*station.identifier* -- any string identifying the station name in the header, defaults to "StationNr",
 
-*bottom.identifier* -- any string identidying the station depth in the header, defaults to "Echolote"
+*bottom.identifier* -- any string identifying the station depth in the header, defaults to "Echolote"
 
 ## Format requirements
 
 Currently the identifiers must have a format of ".\*= (.\*)" where "(.*)" contains the value.
+<!-- ??? What do you mean ??? -->
 
 ## Examples
 
 ```{r example, echo=TRUE}
 Ex1 <- read_btl_DK("example_data/EMB.btl")
-head(Ex1)
-
 Ex2 <- read_btl_DK("example_data/POS.btl")
-head(Ex2)
+```
+
+### Full data frame
+
+Each record is represented by 4 lines in the table:
+
+ * average,
+ * standard deviation,
+ * minimum,
+ * maximum  
+  (see column *statistic*)
+
+```{r Ex1, echo=TRUE}
+library(pander)
+
+pander(Ex1$df, emphasize.strong.rows = which(Ex1$df$statistic == "(avg)"))
+pander(Ex1$meta)
+```
+
+### Only averages
+
+```{r Ex2, echo=TRUE}
+pander(subset(Ex2$df, statistic == "(avg)"))
+pander(Ex2$meta)
 ```
 
 ## Issues / ToDo's
