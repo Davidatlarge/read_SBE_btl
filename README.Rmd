@@ -51,14 +51,14 @@ Each record is represented by 4 lines in the table:
 ```{r Ex1, echo=TRUE}
 library(pander)
 
-pander(Ex1$df, emphasize.strong.rows = which(Ex1$df$statistic == "(avg)"))
+pander(Ex1$data, emphasize.strong.rows = which(Ex1$data$statistic == "(avg)"))
 pander(Ex1$meta)
 ```
 
 ### Only averages
 
 ```{r Ex2, echo=TRUE}
-pander(subset(Ex2$df, statistic == "(avg)"))
+pander(subset(Ex2$data, statistic == "(avg)"))
 pander(Ex2$meta)
 ```
 
