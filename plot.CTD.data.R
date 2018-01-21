@@ -3,7 +3,7 @@ library(reshape2)
 library(ggplot2)
 
 plot.CTD.data <- function(CTD.data){
-    df   <- CTD.data$data
+    df   <- subset(CTD.data$data, statistic == "(avg)")
     meta <- CTD.data$meta
     
     potential.id.vars <- c("depSM", "DepSM", "prDM", "PrDM", "pr",
