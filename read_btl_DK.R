@@ -19,6 +19,7 @@ read_btl_DK <- function(filename,
                      skip = grep("Btl_Posn", bottle) + 1,
                      header = F, col.names = header,
                      stringsAsFactors = FALSE)
+    data$statistic <- gsub(" ", "", data$statistic)
     
     # raw.data <- read.table(filename, 
     #                        sep = "", 
