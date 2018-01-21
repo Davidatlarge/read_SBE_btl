@@ -8,6 +8,7 @@ plot.CTD.data <- function(CTD.data){
     
     potential.id.vars <- c("depSM", "DepSM", "prDM", "PrDM", "pr",
                            "scan", "nbin", "Date", "statistic",
+                           "Btl_Posn", "Btl_ID",
                            "flag", "timeS", "nbf",
                            "altM", "prDM", "spar",
                            "header.latitude", "header.longitude",
